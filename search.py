@@ -10,9 +10,9 @@ def google_search(search_term, api_key, cse_id, **kwargs):
     service = build("customsearch", "v1", developerKey=api_key)
     res = service.cse().list(q=search_term, cx=cse_id, **kwargs).execute()
     return res
-
+    
 def extract(q, emails_collected, start_index):
-	''' Extract the emails & looping next pages.. 
+	''' Extract the emails & loop next pages.. 
 	'''
 	result = google_search(q, my_api_key, my_cse_id, start=start_index)
 
@@ -31,13 +31,13 @@ def extract(q, emails_collected, start_index):
 	except:
 		pass
 
-
 def g_search(q):
 	'''
 	Main function for gathering all the results
 	'''
 	emails_collected = []
 	extract(q,emails_collected,1)
+
 	#finally, removing duplicates
 	emails_collected = list(set(emails_collected)) 
 	return emails_collected
