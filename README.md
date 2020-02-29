@@ -1,6 +1,6 @@
 # AOL EMAIL LEADS SCRAPER
 
-Little scrapper for populating a google sheets sheet automatically, based on Python3, Google Sheets Api and Google Search Api.
+Little scrapper for populating a Google Sheets sheet automatically. Based on Python3, Google Sheets Api and Google Search Api.
 
 
 ## Installation
