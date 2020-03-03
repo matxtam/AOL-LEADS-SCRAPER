@@ -66,35 +66,39 @@ def write(SPREADSHEET_ID, values, write_range):
 def values_to_column(h,values):
     '''Format list to write in sheet
     '''
-    new_list = [[h]]
+    new_list = [[h.split('"')[1]]]
     for x in values:
         new_list.append([x])
+    print (new_list)
+    input()
     return new_list
 
-
+# If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-num_to_col = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR  ','AS','AT','AU','AV','AW','AX','AY','AZ','BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN']
 
 ###The main process
 #Connecting to Google Sheets API
-service = connect(SCOPES) 
+service = connect(SCOPES)
+
+num_to_col = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR  ','AS','AT','AU','AV','AW','AX','AY','AZ','BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN']
 #Search sheets names
-sheets = sheet_search(SPREADSHEET_ID) 
+sheets = sheet_search(SPREADSHEET_ID)
 for i in sheets[1:]:
     state = i['properties']['title']
-    RANGE_NAME = state + '!A1:BN1'
+    RANGE_NAME = state + '!A:A' 
     #Read Column names
-    values_read = read(SPREADSHEET_ID, RANGE_NAME) 
+    values_read = read(SPREADSHEET_ID, RANGE_NAME)
     col = 0
-    for h in values_read[0][1:]:
-        h = h.strip()
+    for h in values_read[1:]:
+        h = h[0]
         #Make Google search query
-        q= '"'+ h +'" "'+ state +'" "' + 'aol.com"' 
-        #Invoquee Google Search function and format values
-        values = values_to_column(h,g_search(q)) 
+        q= h 
+        #Invoke Google Search function and format values
+        values = values_to_column(h,g_search(q))
         col += 1
         col_name = num_to_col[col]
-        write_range = state + '!' + col_name + ':' + col_name 
         #Write Emails in Sheet
-        write(SPREADSHEET_ID,values,write_range) 
-    print('Next State')
+        write_range = state + '!' + col_name + ':' + col_name 
+        write(SPREADSHEET_ID,values,write_range)
+
+    #print('next state')
