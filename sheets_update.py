@@ -7,7 +7,6 @@ from google.auth.transport.requests import Request
 from search import g_search
 from settings import SPREADSHEET_ID
 
-
 def connect(SCOPES):
     """Connects sheets API
     """
@@ -33,9 +32,9 @@ def connect(SCOPES):
     service = build('sheets', 'v4', credentials=creds)
     return service
 
+
 def sheet_search(SPREADSHEET_ID):
-    '''Search sheets names
-    '''
+    #Seearch sheets names
     sheet_metadata = service.spreadsheets().get(spreadsheetId=SPREADSHEET_ID).execute()
     sheets = sheet_metadata.get('sheets', '')
     title = sheets[0].get("properties", {}).get("title", "Sheet1")
@@ -43,8 +42,6 @@ def sheet_search(SPREADSHEET_ID):
     return sheets
 
 def read(SPREADSHEET_ID,RANGE_NAME):
-    '''Search Column Names
-    '''
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=SPREADSHEET_ID,
                                 range=RANGE_NAME).execute()
@@ -52,8 +49,6 @@ def read(SPREADSHEET_ID,RANGE_NAME):
     return values
 
 def write(SPREADSHEET_ID, values, write_range):
-    '''Write emails collected to sheet
-    '''
     body = {
         'values': values
     }
@@ -69,8 +64,6 @@ def values_to_column(h,values):
     new_list = [[h.split('"')[1]]]
     for x in values:
         new_list.append([x])
-    print (new_list)
-    input()
     return new_list
 
 # If modifying these scopes, delete the file token.pickle.
@@ -90,15 +83,21 @@ for i in sheets[1:]:
     values_read = read(SPREADSHEET_ID, RANGE_NAME)
     col = 0
     for h in values_read[1:]:
-        h = h[0]
-        #Make Google search query
-        q= h 
-        #Invoke Google Search function and format values
-        values = values_to_column(h,g_search(q))
-        col += 1
-        col_name = num_to_col[col]
-        #Write Emails in Sheet
-        write_range = state + '!' + col_name + ':' + col_name 
-        write(SPREADSHEET_ID,values,write_range)
+        try:
+            h = h[0]
+            #Make Google search query
+            q= h 
+            #Invoke Google Search function and format values
+            values = values_to_column(h,g_search(q))
+            col += 1
+            col_name = num_to_col[col]
+            #Write Emails in Sheet
+            write_range = state + '!' + col_name + ':' + col_name 
+            write(SPREADSHEET_ID,values,write_range)
+        except:
+            pass
 
     #print('next state')
+
+
+    
